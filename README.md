@@ -178,16 +178,55 @@ cd /var
 ```sh
 # Create virtualenv
 virtualenv /var/www/toto-app3/django-env
+cd /var/www/toto-app3/
 
 # Activate virtualenv
-source /var/www/toto-app3/django-env/bin/activate 
+source django-env/bin/activate 
 
 # test if pip exist
 pip --version
 
 # Desactivate virtualenv
-deactivate
+# deactivate
 
+# Install Django
+bin/pip install django
+
+# Test Django installaton
+django --version
+```
+
+### Create Django App toto-app3
+env-myapp/bin/django-admin.py startproject toto-app3
+
+#Configuring mod_wsgi eurecia virtual host
+nano /etc/apache2/sites-available/myapp
+"""
+<VirtualHost *:80>
+    WSGIDaemonProcess eurecia python-path=/var/www/myapp/eurecia:/var/www/myapp/env-myapp/lib/python2.7/site-packages
+    WSGIProcessGroup eurecia 
+    WSGIScriptAlias / /var/www/myapp/eurecia/eurecia/wsgi.py 
+    #WSGIScriptPath /var/www/myapp/eurecia/ 
+
+    ServerAdmin webmaster@localhost 
+    ServerName www.myapp.com 
+    #DocumentRoot /var/www/myapp 
+
+    <Directory /var/www/myapp/eurecia/>
+        <Files wsgi.py> 
+            Order deny,allow 
+            Allow from all 
+        </Files> 
+    </Directory> 
+
+    ErrorLog ${APACHE_LOG_DIR}/error.log 
+    # Possible values include: debug, info, notice, warn, error, crit, 
+    # alert, emerg. 
+    LogLevel warn 
+    
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+"""
 
 
 
