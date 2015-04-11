@@ -1,4 +1,4 @@
-## Web server for Django App
+## Web server for simple or Django App
 This post provides a quick and easy way to set up web server for multiple Apps. It shows how to:
 - Create simple app
 - Set-up virtualhosts for simple app
