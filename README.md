@@ -123,7 +123,7 @@ ln -s ../sites-available/www.classical_app.com .
 # Restart server
 /etc/init.d/apache2 restrart
 ```
-Cheik **www.classical_app.com** on your browser
+Cheik **www.simple_app.com** on your browser
 
 ### 4 - Create Django web app
 ```sh
