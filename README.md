@@ -162,7 +162,7 @@ source django-env/bin/activate
 django-admin.py startproject web_app_django
 ```
 
-# 5 - Configuring mod_wsgi virtual host
+### 5 - Configuring mod_wsgi virtual host
 ```
 # Change directory
 cd /etc/apache2/sites-available/
@@ -196,6 +196,7 @@ nano /etc/apache2/sites-available/www.django_app.com
     
     CustomLog ${APACHE_LOG_DIR}/access.log combined
 </VirtualHost>
+"""
 
 # Activate VirtualHosts
 cd ~
