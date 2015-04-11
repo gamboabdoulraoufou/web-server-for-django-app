@@ -1,7 +1,7 @@
 ## Web server for Django App
-This post provides a quick and easy way to set up web server for multiple Django App. It shows how to:
-- Install gsutils tools
-
+This post provides a quick and easy way to set up web server for multiple Apps. It shows how to:
+- Set-up virtualhosts for classical app
+- Set-up virtualhosts for Django App
 
 _My configuration:_  
 1 VM on Google Compute Engine
@@ -10,7 +10,7 @@ CPU: 1
 Memory: 3.75 GB
 External IP
 
-### 1 - Set up env 
+### 1 - Install packages
 ```sh
 # Update packages source
 apt-get update
@@ -36,98 +36,47 @@ apt-get install python-pip
 
 # Install virtualenv
 python-virtualenv
-
-# Add user
-sudo su
-adduser toto
-
-# Create repository for each app to store app file
-mkdir /var/www/toto-app1
-mkdir /var/www/toto-app2
-mkdir -r /home/toto/toto-app3/public_html/
-
-# Create index file for each app
-touch /var/www/toto-app1/index.html
-touch /var/www/toto-app2/index.html
-touch /home/toto/toto-app3/public_html/index.html
-
-echo '<html><body><h1>Hello toto-app1!</h1></body></html>' > /var/www/toto-app1/index.html
-echo '<html><body><h1>Hello toto-app2!</h1></body></html>' > /var/www/toto-app2/index.html
-echo '<html><body><h1>Hello toto-app3!</h1></body></html>' > /home/toto/toto-app3/public_html/index.html
-
-# link toto-app3 to /var/www/
-cd /var/www/
-ln -s /home/toto/toto-app3 toto-app3
 ```
 
-### Set up virtualHost to store multiple apps on the same server
+### Configure classical web app
+```sh
+# Add user
+sudo su
+adduser classical_app_user
+
+# Create repository to store app file
+mkdir -r /home/classical_app_user/app/public_html/
+
+# Create link to /var/www/
+cd /var/www/
+ln -s /home/classical_app_user/app/public_html/ classical_app
+
+# Create index.html file 
+touch /var/www/classical_app/index.html
+echo '<html><body><h1>Hello classical_app!</h1></body></html>' > /var/www/classical_app/index.html
+```
+
+### Set up virtualHost to deploy classical app
 ```sh
 # Change directory
 cd /etc/apache2/sites-available/
 
-# Create configuration file for each app
-cp default www.toto-app1.com
-cp default www.toto-app2.com
+# Create configuration file
+cp default www.classical_app.com
 
 # Change file configuration
-nano  www.toto-app1.com
+nano  www.classical_app.com
 """
 <VirtualHost *:80>
         ServerAdmin webmaster@localhost
-        ServerName www.toto-app1.com
+        ServerName www.classical_app.com
         
-        DocumentRoot /var/www/toto-app1/
+        DocumentRoot /var/www/classical_app/
         <Directory />
                 Options FollowSymLinks
                 AllowOverride all 
         </Directory>
-        <Directory /var/www/toto-app1/>
-                Options Indexes FollowSymLinks MultiViews
-                AllowOverride all 
-                Order allow,deny
-                allow from all
-        </Directory>
-
-        ScriptAlias /cgi-bin/ /usr/lib/cgi-bin/
-        <Directory "/usr/lib/cgi-bin">
-                AllowOverride None
-                Options +ExecCGI -MultiViews +SymLinksIfOwnerMatch
-                Order allow,deny
-                Allow from all
-        </Directory>
-
-        ErrorLog /var/log/apache2/error.log
-
-        # Possible values include: debug, info, notice, warn, error, crit,
-        # alert, emerg.
-        LogLevel warn
-
-        CustomLog /var/log/apache2/access.log combined
-
-    Alias /doc/ "/usr/share/doc/"
-    <Directory "/usr/share/doc/">
-        Options Indexes MultiViews FollowSymLinks
-        AllowOverride None
-        Order deny,allow
-        Deny from all
-        Allow from 127.0.0.0/255.0.0.0 ::1/128
-    </Directory>
-
-</VirtualHost>
-"""
-
-nano  www.toto-app2.com
-"""
-<VirtualHost *:80>
-        ServerAdmin webmaster@localhost
-        ServerName www.toto-app1.com
-        
-        DocumentRoot /var/www/toto-app2/
-        <Directory />
-                Options FollowSymLinks
-                AllowOverride all 
-        </Directory>
-        <Directory /var/www/toto-app2/>
+        <Directory /var/www/classical_app/>
                 Options Indexes FollowSymLinks MultiViews
                 AllowOverride all 
                 Order allow,deny
@@ -165,54 +114,71 @@ nano  www.toto-app2.com
 # Activate VirtualHosts
 cd ~
 cd /etc/apache2/sites-enabled
-ln -s ../sites-available/toto-app1 .
-ln -s ../sites-available/toto-app2 .
-
-cd /var
+ln -s ../sites-available/www.classical_app.com .
 
 # Restart server
 /etc/init.d/apache2 restrart
-
 ```
-### Set-up virtualenv for Django App
+Cheik **www.classical_app.com** on your browser
+
+### Configure Django web app
 ```sh
+# Add user
+sudo su
+adduser django_app_user
+
+# Create repository to store app file
+mkdir -r /home/django_app_user/app/public_html/
+
+# Create link to /var/www/
+cd /var/www/
+ln -s /home/django_app_user/app/public_html/ django_app
+
 # Create virtualenv
-virtualenv /var/www/toto-app3/django-env
-cd /var/www/toto-app3/
+cd /var/www/django_app
+virtualenv django_env
 
 # Activate virtualenv
 source django-env/bin/activate 
 
-# test if pip exist
+# Cheick if pip exist
 pip --version
 
 # Desactivate virtualenv
-# deactivate
+deactivate
 
 # Install Django
-bin/pip install django
+django-env/bin/pip install django
 
 # Test Django installaton
-django --version
+django-env/bin/django --version
+
+# Create Django App toto-app3
+source django-env/bin/activate
+django-admin.py startproject web_app_django
 ```
 
-### Create Django App toto-app3
-env-myapp/bin/django-admin.py startproject toto-app3
+# Configuring mod_wsgi eurecia virtual host
+```
+# Change directory
+cd /etc/apache2/sites-available/
 
-#Configuring mod_wsgi eurecia virtual host
-nano /etc/apache2/sites-available/myapp
+# Create configuration file
+cp default www.django_app.com
+
+nano /etc/apache2/sites-available/www.django_app.com
 """
 <VirtualHost *:80>
-    WSGIDaemonProcess eurecia python-path=/var/www/myapp/eurecia:/var/www/myapp/env-myapp/lib/python2.7/site-packages
-    WSGIProcessGroup eurecia 
-    WSGIScriptAlias / /var/www/myapp/eurecia/eurecia/wsgi.py 
+    WSGIDaemonProcess eurecia python-path=/var/www/django_app:/var/www/django_app/django_env/lib/python2.7/site-packages
+    WSGIProcessGroup web_app_django 
+    WSGIScriptAlias / /var/www/django_app/web_app_django/web_app_django/wsgi.py 
     #WSGIScriptPath /var/www/myapp/eurecia/ 
 
     ServerAdmin webmaster@localhost 
-    ServerName www.myapp.com 
+    ServerName www.django_app.com 
     #DocumentRoot /var/www/myapp 
 
-    <Directory /var/www/myapp/eurecia/>
+    <Directory /var/www/django_app/web_app_django/>
         <Files wsgi.py> 
             Order deny,allow 
             Allow from all 
@@ -226,8 +192,9 @@ nano /etc/apache2/sites-available/myapp
     
     CustomLog ${APACHE_LOG_DIR}/access.log combined
 </VirtualHost>
-"""
+```
 
+Cheik **www.django_app.com** on your browser
 
 
 
