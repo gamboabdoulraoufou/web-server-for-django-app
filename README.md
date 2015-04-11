@@ -60,7 +60,7 @@ touch /var/www/simple_app/index.html
 echo '<html><body><h1>Hello simple app!</h1></body></html>' > /var/www/simple_app/index.html
 ```
 
-### 3 - Set up virtualHost to deploy classical app
+### 3 - Set up VirtualHosts to deploy classical app
 ```sh
 # Change directory
 cd /etc/apache2/sites-available/
