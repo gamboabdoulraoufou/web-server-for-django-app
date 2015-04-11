@@ -163,7 +163,7 @@ django-admin.py startproject web_app_django
 ```
 
 ### 5 - Configuring mod_wsgi virtual host
-```
+```sh
 # Change directory
 cd /etc/apache2/sites-available/
 
