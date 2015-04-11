@@ -1,7 +1,9 @@
 ## Web server for Django App
 This post provides a quick and easy way to set up web server for multiple Apps. It shows how to:
-- Set-up virtualhosts for classical app
-- Set-up virtualhosts for Django App
+- Create simple app
+- Set-up virtualhosts for simple app
+- Create Django web app
+- Configuring mod_wsgi virtual host
 
 _My configuration:_  
 - 1 VM on Google Compute Engine  
@@ -10,7 +12,7 @@ _My configuration:_
 - Memory: 3.75 GB  
 - External IP  
 
-In the absence of a dsn configuration, I changed the /etc/hosts file (on my computer) in order that www.django_app.com and www.classical_app.com sign on my IP address
+In the absence of a DNS configuration, I changed the /etc/hosts file (on my computer) in order that www.django_app.com and www.classical_app.com sign on my IP address
 
 ### 1 - Install packages
 ```sh
@@ -40,45 +42,45 @@ apt-get install python-pip
 python-virtualenv
 ```
 
-### Configure classical web app
+### 2 - Create simple web app
 ```sh
 # Add user
 sudo su
-adduser classical_app_user
+adduser simple_app_user
 
 # Create repository to store app file
-mkdir -r /home/classical_app_user/app/public_html/
+mkdir -r /home/simple_app_user/app/public_html/
 
 # Create link to /var/www/
 cd /var/www/
-ln -s /home/classical_app_user/app/public_html/ classical_app
+ln -s /home/simple_app_user/app/public_html/ classical_app
 
 # Create index.html file 
-touch /var/www/classical_app/index.html
-echo '<html><body><h1>Hello classical_app!</h1></body></html>' > /var/www/classical_app/index.html
+touch /var/www/simple_app/index.html
+echo '<html><body><h1>Hello simple app!</h1></body></html>' > /var/www/simple_app/index.html
 ```
 
-### Set up virtualHost to deploy classical app
+### 3 - Set up virtualHost to deploy classical app
 ```sh
 # Change directory
 cd /etc/apache2/sites-available/
 
 # Create configuration file
-cp default www.classical_app.com
+cp default www.simple_app.com
 
 # Change file configuration
-nano  www.classical_app.com
+nano  www.simple_app.com
 """
 <VirtualHost *:80>
         ServerAdmin webmaster@localhost
-        ServerName www.classical_app.com
+        ServerName www.simple_app.com
         
-        DocumentRoot /var/www/classical_app/
+        DocumentRoot /var/www/simple_app/
         <Directory />
                 Options FollowSymLinks
                 AllowOverride all 
         </Directory>
-        <Directory /var/www/classical_app/>
+        <Directory /var/www/simple_app/>
                 Options Indexes FollowSymLinks MultiViews
                 AllowOverride all 
                 Order allow,deny
@@ -123,7 +125,7 @@ ln -s ../sites-available/www.classical_app.com .
 ```
 Cheik **www.classical_app.com** on your browser
 
-### Configure Django web app
+### 4 - Create Django web app
 ```sh
 # Add user
 sudo su
@@ -160,7 +162,7 @@ source django-env/bin/activate
 django-admin.py startproject web_app_django
 ```
 
-# Configuring mod_wsgi eurecia virtual host
+# 5 - Configuring mod_wsgi virtual host
 ```
 # Change directory
 cd /etc/apache2/sites-available/
