@@ -192,6 +192,14 @@ nano /etc/apache2/sites-available/www.django_app.com
     
     CustomLog ${APACHE_LOG_DIR}/access.log combined
 </VirtualHost>
+
+# Activate VirtualHosts
+cd ~
+cd /etc/apache2/sites-enabled
+ln -s ../sites-available/www.django_app.com .
+
+# Restart server
+/etc/init.d/apache2 restrart
 ```
 
 Cheik **www.django_app.com** on your browser
