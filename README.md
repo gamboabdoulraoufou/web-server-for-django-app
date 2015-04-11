@@ -10,6 +10,11 @@ _My configuration:_
 - Memory: 3.75 GB  
 - External IP  
 
+In the absence of a dsn configuration, I changed my /etc/hosts file in order that www.django_app.com and www.classical_app.com sign on my IP address
+
+IP www.classical_app.com  
+IP www.django_app.com  
+
 ### 1 - Install packages
 ```sh
 # Update packages source
