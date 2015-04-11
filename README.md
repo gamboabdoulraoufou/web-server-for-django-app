@@ -12,7 +12,7 @@ _My configuration:_
 - Memory: 3.75 GB  
 - External IP  
 
-In the absence of a DNS configuration, I changed the /etc/hosts file (on my computer) in order that www.django_app.com and www.classical_app.com sign on my IP address
+In the absence of a DNS configuration, I changed the /etc/hosts file (on my computer) in order that www.simple_app.com and www.django_app.com sign on my IP address
 
 ### 1 - Install packages
 ```sh
