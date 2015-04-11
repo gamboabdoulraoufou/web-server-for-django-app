@@ -4,11 +4,11 @@ This post provides a quick and easy way to set up web server for multiple Apps. 
 - Set-up virtualhosts for Django App
 
 _My configuration:_  
-1 VM on Google Compute Engine
-OS: Debian 7 (Wheezy)
-CPU: 1
-Memory: 3.75 GB
-External IP
+1 VM on Google Compute Engine  
+OS: Debian 7 (Wheezy)  
+CPU: 1  
+Memory: 3.75 GB  
+External IP  
 
 ### 1 - Install packages
 ```sh
