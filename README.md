@@ -53,7 +53,7 @@ mkdir -r /home/simple_app_user/app/public_html/
 
 # Create link to /var/www/
 cd /var/www/
-ln -s /home/simple_app_user/app/public_html/ classical_app
+ln -s /home/simple_app_user/app/public_html/ simple_app
 
 # Create index.html file 
 touch /var/www/simple_app/index.html
